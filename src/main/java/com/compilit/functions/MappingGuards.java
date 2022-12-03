@@ -13,7 +13,7 @@ public final class MappingGuards {
      * @param <T>      the return type
      * @return either the result of the supplier or null
      */
-    static <T> T orNull(Supplier<T> supplier) {
+    public static <T> T orNull(Supplier<T> supplier) {
         return orDefault(supplier, null);
     }
 
@@ -23,7 +23,7 @@ public final class MappingGuards {
      * @param <E>              the checked exception
      * @return either the wanted value as a String or the given default value
      */
-    static <T, E extends Exception> T orNullOnException(ThrowingSupplier<T, E> throwingSupplier) {
+    public static <T, E extends Exception> T orNullOnException(ThrowingSupplier<T, E> throwingSupplier) {
         return orDefaultOnException(throwingSupplier, null);
     }
 
@@ -33,7 +33,7 @@ public final class MappingGuards {
      * @param <O>      the return type
      * @return either the result of the supplier value or null
      */
-    static <I, O> O orNull(Function<I, O> function, I value) {
+    public static <I, O> O orNull(Function<I, O> function, I value) {
         return orDefault(function, value, null);
     }
 
@@ -43,7 +43,7 @@ public final class MappingGuards {
      * @param <O>      the return type
      * @return either the result of the supplier value or null
      */
-    static <I, O, E extends Exception> O orNullOnException(ThrowingFunction<I, O, E> function, I value) {
+    public static <I, O, E extends Exception> O orNullOnException(ThrowingFunction<I, O, E> function, I value) {
         return orDefaultOnException(function, value, null);
     }
 
@@ -54,7 +54,7 @@ public final class MappingGuards {
      * @param <T>          the return type
      * @return either the result of the supplier or the given default value
      */
-    static <T> T orDefault(
+    public static <T> T orDefault(
         Supplier<T> supplier,
         T defaultValue
     ) {
@@ -71,7 +71,7 @@ public final class MappingGuards {
      * @param <T>          the return type
      * @return either the result of the supplier or the given default value
      */
-    static <T, E extends Exception> T orDefaultOnException(
+    public static <T, E extends Exception> T orDefaultOnException(
         ThrowingSupplier<T, E> supplier,
         T defaultValue
     ) {
@@ -87,7 +87,7 @@ public final class MappingGuards {
      * @param <O>      the return type
      * @return either result of the function or the given default value
      */
-    static <I, O, E extends Exception> O orDefaultOnException(
+    public static <I, O, E extends Exception> O orDefaultOnException(
         ThrowingFunction<I, O, E> function,
         I value,
         O defaultValue
@@ -105,7 +105,7 @@ public final class MappingGuards {
      * @param <O>      the return type
      * @return either result of the function or the given default value
      */
-    static <I, O> O orDefault(
+    public static <I, O> O orDefault(
         Function<I, O> function,
         I value,
         O defaultValue
@@ -122,7 +122,7 @@ public final class MappingGuards {
      * @param <T>      the return type
      * @return either the result of the supplier as a String or null
      */
-    static <T> String asStringOrNull(Supplier<T> supplier) {
+    public static <T> String asStringOrNull(Supplier<T> supplier) {
         return asStringOrDefault(supplier, null);
     }
 
@@ -131,7 +131,7 @@ public final class MappingGuards {
      * @param <T>      the return type
      * @return either the result of the supplier as a String or the given default value
      */
-    static <T> String asStringOrDefault(Supplier<T> supplier, String defaultValue) {
+    public static <T> String asStringOrDefault(Supplier<T> supplier, String defaultValue) {
         return orDefault((() -> supplier.get().toString()), defaultValue);
     }
 
@@ -145,7 +145,7 @@ public final class MappingGuards {
      * @param <E>              the checked exception
      * @return either the wanted value as a String or the given default value
      */
-    static <T, E extends Exception> Supplier<T> onCheckedException(ThrowingSupplier<T, E> throwingSupplier) {
+    public static <T, E extends Exception> Supplier<T> onCheckedException(ThrowingSupplier<T, E> throwingSupplier) {
         return () -> {
             try {
                 return throwingSupplier.get();
@@ -161,7 +161,7 @@ public final class MappingGuards {
      * @param exceptionHandler the handler to handle the potential exception
      * @return a runnable
      */
-    static Runnable orHandleException(Runnable runnable, Consumer<Exception> exceptionHandler) {
+    public static Runnable orHandleException(Runnable runnable, Consumer<Exception> exceptionHandler) {
         return () -> {
             try {
                 runnable.run();
@@ -179,7 +179,7 @@ public final class MappingGuards {
      * @param <E> the specific checked exception type
      * @return a runnable
      */
-    static <E extends Exception> Runnable orHandleCheckedException(ThrowingRunnable<E> throwingRunnable, Consumer<Exception> exceptionHandler) {
+    public static <E extends Exception> Runnable orHandleCheckedException(ThrowingRunnable<E> throwingRunnable, Consumer<Exception> exceptionHandler) {
         return () -> {
             try {
                 throwingRunnable.run();
