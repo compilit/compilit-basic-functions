@@ -1,20 +1,20 @@
 package com.compilit.functions;
 
-import static com.compilit.functions.MappingGuards.asStringOrDefault;
-import static com.compilit.functions.MappingGuards.asStringOrNull;
-import static com.compilit.functions.MappingGuards.onCheckedException;
-import static com.compilit.functions.MappingGuards.orDefaultOnException;
-import static com.compilit.functions.MappingGuards.orHandleCheckedException;
-import static com.compilit.functions.MappingGuards.orHandleException;
-import static com.compilit.functions.MappingGuards.orNullOnException;
-import static com.compilit.functions.MappingGuards.orDefault;
-import static com.compilit.functions.MappingGuards.orNull;
+import static com.compilit.functions.FunctionResultGuards.asStringOrDefault;
+import static com.compilit.functions.FunctionResultGuards.asStringOrNull;
+import static com.compilit.functions.FunctionResultGuards.onCheckedException;
+import static com.compilit.functions.FunctionResultGuards.orDefaultOnException;
+import static com.compilit.functions.FunctionResultGuards.orHandleCheckedException;
+import static com.compilit.functions.FunctionResultGuards.orHandleException;
+import static com.compilit.functions.FunctionResultGuards.orNullOnException;
+import static com.compilit.functions.FunctionResultGuards.orDefault;
+import static com.compilit.functions.FunctionResultGuards.orNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
-public class MappingGuardsTest {
+public class FunctionResultGuardsTest {
 
     private static final String TEST_VALUE = "test";
     private static final String DEFAULT_TEST_VALUE = "default";
@@ -50,7 +50,7 @@ public class MappingGuardsTest {
 
     @Test
     void asStringOrElseNull_exception_shouldReturnNull() {
-        assertThat(asStringOrNull(MappingGuardsTest::runtimeExceptionThrowingMethod)).isNull();
+        assertThat(asStringOrNull(FunctionResultGuardsTest::runtimeExceptionThrowingMethod)).isNull();
     }
 
     @Test
@@ -60,7 +60,7 @@ public class MappingGuardsTest {
 
     @Test
     void asStringOrElseDefault_exception_shouldReturnDefault() {
-        assertThat(asStringOrDefault(MappingGuardsTest::runtimeExceptionThrowingMethod, DEFAULT_TEST_VALUE)).isEqualTo(DEFAULT_TEST_VALUE);
+        assertThat(asStringOrDefault(FunctionResultGuardsTest::runtimeExceptionThrowingMethod, DEFAULT_TEST_VALUE)).isEqualTo(DEFAULT_TEST_VALUE);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class MappingGuardsTest {
 
     @Test
     void orNullOnException_throwingFunction_shouldReturnNull() {
-        var result = orNullOnException(MappingGuardsTest::checkedExceptionThrowingMethod);
+        var result = orNullOnException(FunctionResultGuardsTest::checkedExceptionThrowingMethod);
         assertThat(result).isNull();
     }
 
@@ -100,13 +100,13 @@ public class MappingGuardsTest {
 
     @Test
     void orDefaultOnException_nonThrowingFunction_shouldReturnResult() {
-        var result = orDefaultOnException(MappingGuardsTest::runtimeExceptionThrowingMethod, "1");
+        var result = orDefaultOnException(FunctionResultGuardsTest::runtimeExceptionThrowingMethod, "1");
         assertThat(result).isEqualTo("1");
     }
 
     @Test
     void orDefaultOnException_throwingFunction_shouldReturnNull() {
-        var result = orDefaultOnException(MappingGuardsTest::checkedExceptionThrowingMethod, null);
+        var result = orDefaultOnException(FunctionResultGuardsTest::checkedExceptionThrowingMethod, null);
         assertThat(result).isNull();
     }
 
@@ -114,7 +114,7 @@ public class MappingGuardsTest {
     void orHandleException_nonThrowingFunction_shouldNotHandleException() {
         AtomicReference<Boolean> exceptionHandled = new AtomicReference<>();
         exceptionHandled.set(false);
-        orHandleException(() -> System.out.println(), x -> exceptionHandled.set(true)).run();
+        orHandleException(() -> System.out.println(), x -> exceptionHandled.set(true));
         assertThat(exceptionHandled.get()).isFalse();
     }
 
@@ -122,7 +122,7 @@ public class MappingGuardsTest {
     void orHandleException_throwingFunction_shouldHandleException() {
         AtomicReference<Boolean> exceptionHandled = new AtomicReference<>();
         exceptionHandled.set(false);
-        orHandleException(() -> {throw new RuntimeException();}, x -> exceptionHandled.set(true)).run();
+        orHandleException(() -> {throw new RuntimeException();}, x -> exceptionHandled.set(true));
         assertThat(exceptionHandled.get()).isTrue();
     }
 
@@ -130,7 +130,7 @@ public class MappingGuardsTest {
     void orHandleCheckedException_nonThrowingFunction_shouldNotHandleException() {
         AtomicReference<Boolean> exceptionHandled = new AtomicReference<>();
         exceptionHandled.set(false);
-        orHandleCheckedException(() -> System.out.println(), x -> exceptionHandled.set(true)).run();
+        orHandleCheckedException(() -> System.out.println(), x -> exceptionHandled.set(true));
         assertThat(exceptionHandled.get()).isFalse();
     }
 
@@ -138,7 +138,7 @@ public class MappingGuardsTest {
     void orHandleCheckedException_throwingFunction_shouldHandleException() {
         AtomicReference<Boolean> exceptionHandled = new AtomicReference<>();
         exceptionHandled.set(false);
-        orHandleCheckedException(() -> {throw new Exception();}, x -> exceptionHandled.set(true)).run();
+        orHandleCheckedException(() -> {throw new Exception();}, x -> exceptionHandled.set(true));
         assertThat(exceptionHandled.get()).isTrue();
     }
 

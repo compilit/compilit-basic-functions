@@ -8,7 +8,7 @@ The API is quite self-explanatory. Here is a little example, however.
 ### usage
 
 ```java
-import com.compilit.functions.MappingGuards.*;
+
 
 class ExampleClass {
 
@@ -17,7 +17,7 @@ class ExampleClass {
     public byte[] getValueAsAString() {
         return MappingGuards.orNull(() -> value.byteValue()); //returns null when the value is null
     }
-    
+
 }
 ```
 

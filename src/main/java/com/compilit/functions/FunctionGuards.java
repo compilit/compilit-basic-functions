@@ -4,16 +4,18 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class MappingGuards {
-
-    private MappingGuards() {}
+/**
+ * These functions all transform possible throwing operations into 'safe' ones which will not throw any exception.
+ */
+public final class FunctionGuards {
+    private FunctionGuards() {}
 
     /**
      * @param supplier a potentially throwing supplier
      * @param <T>      the return type
      * @return either the result of the supplier or null
      */
-    public static <T> T orNull(Supplier<T> supplier) {
+    public static <T> Supplier<T> orNull(Supplier<T> supplier) {
         return orDefault(supplier, null);
     }
 
@@ -23,7 +25,7 @@ public final class MappingGuards {
      * @param <E>              the checked exception
      * @return either the wanted value as a String or the given default value
      */
-    public static <T, E extends Exception> T orNullOnException(ThrowingSupplier<T, E> throwingSupplier) {
+    public static <T, E extends Exception> Supplier<T> orNullOnException(ThrowingSupplier<T, E> throwingSupplier) {
         return orDefaultOnException(throwingSupplier, null);
     }
 
@@ -33,8 +35,8 @@ public final class MappingGuards {
      * @param <O>      the return type
      * @return either the result of the supplier value or null
      */
-    public static <I, O> O orNull(Function<I, O> function, I value) {
-        return orDefault(function, value, null);
+    public static <I, O> Function<I, O> orNull(Function<I, O> function) {
+        return orDefault(function, null);
     }
 
     /**
@@ -43,8 +45,8 @@ public final class MappingGuards {
      * @param <O>      the return type
      * @return either the result of the supplier value or null
      */
-    public static <I, O, E extends Exception> O orNullOnException(ThrowingFunction<I, O, E> function, I value) {
-        return orDefaultOnException(function, value, null);
+    public static <I, O, E extends Exception> Function<I, O> orNullOnException(ThrowingFunction<I, O, E> function) {
+        return orDefaultOnException(function, null);
     }
 
 
@@ -54,15 +56,16 @@ public final class MappingGuards {
      * @param <T>          the return type
      * @return either the result of the supplier or the given default value
      */
-    public static <T> T orDefault(
+    public static <T> Supplier<T> orDefault(
         Supplier<T> supplier,
         T defaultValue
-    ) {
+    ) { return () -> {
         try {
             return supplier.get();
         } catch (Exception e) {
             return defaultValue;
         }
+    };
     }
 
     /**
@@ -71,15 +74,17 @@ public final class MappingGuards {
      * @param <T>          the return type
      * @return either the result of the supplier or the given default value
      */
-    public static <T, E extends Exception> T orDefaultOnException(
+    public static <T, E extends Exception> Supplier<T> orDefaultOnException(
         ThrowingSupplier<T, E> supplier,
         T defaultValue
     ) {
-        try {
-            return supplier.get();
-        } catch (Exception e) {
-            return defaultValue;
-        }
+        return () -> {
+            try {
+                return supplier.get();
+            } catch (Exception e) {
+                return defaultValue;
+            }
+        };
     }
 
     /**
@@ -87,16 +92,17 @@ public final class MappingGuards {
      * @param <O>      the return type
      * @return either result of the function or the given default value
      */
-    public static <I, O, E extends Exception> O orDefaultOnException(
+    public static <I, O, E extends Exception> Function<I, O> orDefaultOnException(
         ThrowingFunction<I, O, E> function,
-        I value,
         O defaultValue
     ) {
-        try {
-            return function.apply(value);
-        } catch (Exception e) {
-            return defaultValue;
-        }
+        return input -> {
+            try {
+                return function.apply(input);
+            } catch (Exception e) {
+                return defaultValue;
+            }
+        };
     }
 
 
@@ -105,34 +111,17 @@ public final class MappingGuards {
      * @param <O>      the return type
      * @return either result of the function or the given default value
      */
-    public static <I, O> O orDefault(
+    public static <I, O> Function<I, O> orDefault(
         Function<I, O> function,
-        I value,
         O defaultValue
     ) {
-        try {
-            return function.apply(value);
-        } catch (Exception e) {
-            return defaultValue;
-        }
-    }
-
-    /**
-     * @param supplier a potentially throwing supplier
-     * @param <T>      the return type
-     * @return either the result of the supplier as a String or null
-     */
-    public static <T> String asStringOrNull(Supplier<T> supplier) {
-        return asStringOrDefault(supplier, null);
-    }
-
-    /**
-     * @param supplier a potentially throwing supplier
-     * @param <T>      the return type
-     * @return either the result of the supplier as a String or the given default value
-     */
-    public static <T> String asStringOrDefault(Supplier<T> supplier, String defaultValue) {
-        return orDefault((() -> supplier.get().toString()), defaultValue);
+        return input -> {
+            try {
+                return function.apply(input);
+            } catch (Exception e) {
+                return defaultValue;
+            }
+        };
     }
 
     /**
@@ -188,5 +177,4 @@ public final class MappingGuards {
             }
         };
     }
-
 }
