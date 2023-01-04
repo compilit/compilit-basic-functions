@@ -19,47 +19,47 @@ public class FunctionResultGuardsTest {
     private static final String TEST_VALUE = "test";
     private static final String DEFAULT_TEST_VALUE = "default";
     @Test
-    void orElseNull_noException_shouldReturnValue() {
+    void orNull_noException_shouldReturnValue() {
         assertThat(orNull(() -> TEST_VALUE)).isEqualTo(TEST_VALUE);
     }
 
     @Test
-    void orElseNull_exception_shouldReturnNull() {
+    void orNull_exception_shouldReturnNull() {
         assertThat(orNull(() -> runtimeExceptionThrowingMethod())).isNull();
     }
 
     @Test
-    void orElseNull_checkedException_shouldReturnNull() {
+    void orNull_checkedException_shouldReturnNull() {
         assertThat(orNull(onCheckedException(() -> checkedExceptionThrowingMethod()))).isNull();
     }
 
     @Test
-    void orElseDefault_noException_shouldReturnValue() {
+    void orDefault_noException_shouldReturnValue() {
         assertThat(orDefault(() -> TEST_VALUE, DEFAULT_TEST_VALUE)).isEqualTo(TEST_VALUE);
     }
 
     @Test
-    void orElseDefault_exception_shouldReturnDefaultValue() {
+    void orDefault_exception_shouldReturnDefaultValue() {
         assertThat(orDefault(() -> runtimeExceptionThrowingMethod(), DEFAULT_TEST_VALUE)).isEqualTo(DEFAULT_TEST_VALUE);
     }
 
     @Test
-    void asStringOrElseNull_shouldReturnStringValue() {
+    void asStringorNull_shouldReturnStringValue() {
         assertThat(asStringOrNull(() -> 1)).isEqualTo("1");
     }
 
     @Test
-    void asStringOrElseNull_exception_shouldReturnNull() {
+    void asStringorNull_exception_shouldReturnNull() {
         assertThat(asStringOrNull(FunctionResultGuardsTest::runtimeExceptionThrowingMethod)).isNull();
     }
 
     @Test
-    void asStringOrElseDefault_shouldReturnStringValue() {
+    void asStringorDefault_shouldReturnStringValue() {
         assertThat(asStringOrDefault(() -> 1, DEFAULT_TEST_VALUE)).isEqualTo("1");
     }
 
     @Test
-    void asStringOrElseDefault_exception_shouldReturnDefault() {
+    void asStringorDefault_exception_shouldReturnDefault() {
         assertThat(asStringOrDefault(FunctionResultGuardsTest::runtimeExceptionThrowingMethod, DEFAULT_TEST_VALUE)).isEqualTo(DEFAULT_TEST_VALUE);
     }
 

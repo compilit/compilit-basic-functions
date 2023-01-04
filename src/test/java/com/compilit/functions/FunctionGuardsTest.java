@@ -1,13 +1,14 @@
 package com.compilit.functions;
 
-import static com.compilit.functions.FunctionGuards.onCheckedException;
 import static com.compilit.functions.FunctionGuards.orDefault;
 import static com.compilit.functions.FunctionGuards.orDefaultOnException;
 import static com.compilit.functions.FunctionGuards.orHandleCheckedException;
 import static com.compilit.functions.FunctionGuards.orHandleException;
 import static com.compilit.functions.FunctionGuards.orNull;
 import static com.compilit.functions.FunctionGuards.orNullOnException;
+import static com.compilit.functions.FunctionGuards.orRuntimeException;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
@@ -17,27 +18,33 @@ public class FunctionGuardsTest {
     private static final String TEST_VALUE = "test";
     private static final String DEFAULT_TEST_VALUE = "default";
     @Test
-    void orElseNull_noException_shouldReturnValue() {
+    void orNull_noException_shouldReturnValue() {
         assertThat(orNull(() -> TEST_VALUE).get()).isEqualTo(TEST_VALUE);
     }
 
     @Test
-    void orElseNull_exception_shouldReturnNull() {
+    void orNull_exception_shouldReturnNull() {
         assertThat(orNull(() -> runtimeExceptionThrowingMethod()).get()).isNull();
     }
 
     @Test
-    void orElseNull_checkedException_shouldReturnNull() {
-        assertThat(orNull(onCheckedException(() -> checkedExceptionThrowingMethod())).get()).isNull();
+    void orNull_checkedException_shouldReturnNull() {
+        assertThat(orNull(orRuntimeException(() -> checkedExceptionThrowingMethod())).get()).isNull();
     }
 
     @Test
-    void orElseDefault_noException_shouldReturnValue() {
+    void orRuntimeException_checkedException_shouldThrowException() {
+        assertThatThrownBy(() -> orRuntimeException(() -> checkedExceptionThrowingMethod()).get())
+            .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void orDefault_noException_shouldReturnValue() {
         assertThat(orDefault(() -> TEST_VALUE, DEFAULT_TEST_VALUE).get()).isEqualTo(TEST_VALUE);
     }
 
     @Test
-    void orElseDefault_exception_shouldReturnDefaultValue() {
+    void orDefault_exception_shouldReturnDefaultValue() {
         assertThat(orDefault(() -> runtimeExceptionThrowingMethod(), DEFAULT_TEST_VALUE).get()).isEqualTo(DEFAULT_TEST_VALUE);
     }
 

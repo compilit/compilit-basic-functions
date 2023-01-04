@@ -125,21 +125,19 @@ public final class FunctionGuards {
     }
 
     /**
-     * This function gives you the ability to ignore a checked exception throwing function from
-     * within a functional context. It is mainly meant to be using in combination with one of the
-     * above functions, since it will return a null value in case of an exception.
+     * Take the potentially throwing supplier and in case an exception takes place, transform the exception into a runtime exception
      *
      * @param throwingSupplier a potentially checked exception throwing supplier
      * @param <T>              the return type
      * @param <E>              the checked exception
-     * @return either the wanted value as a String or the given default value
+     * @return a non-checked-exception-throwing supplier. Runtime exception can still take place
      */
-    public static <T, E extends Exception> Supplier<T> onCheckedException(ThrowingSupplier<T, E> throwingSupplier) {
+    public static <T, E extends Exception> Supplier<T> orRuntimeException(ThrowingSupplier<T, E> throwingSupplier) {
         return () -> {
             try {
                 return throwingSupplier.get();
-            } catch (Exception ignored) {
-                return null;
+            } catch (Exception checkedException) {
+                throw new RuntimeException(checkedException);
             }
         };
     }
