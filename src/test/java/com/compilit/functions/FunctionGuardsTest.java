@@ -24,17 +24,17 @@ public class FunctionGuardsTest {
 
     @Test
     void orNull_exception_shouldReturnNull() {
-        assertThat(orNull(() -> runtimeExceptionThrowingMethod()).get()).isNull();
+        assertThat(orNull(FunctionGuardsTest::runtimeExceptionThrowingMethod).get()).isNull();
     }
 
     @Test
     void orNull_checkedException_shouldReturnNull() {
-        assertThat(orNull(orRuntimeException(() -> checkedExceptionThrowingMethod())).get()).isNull();
+        assertThat(orNull(orRuntimeException(FunctionGuardsTest::checkedExceptionThrowingMethod)).get()).isNull();
     }
 
     @Test
     void orRuntimeException_checkedException_shouldThrowException() {
-        assertThatThrownBy(() -> orRuntimeException(() -> checkedExceptionThrowingMethod()).get())
+        assertThatThrownBy(() -> orRuntimeException(FunctionGuardsTest::checkedExceptionThrowingMethod).get())
             .isInstanceOf(RuntimeException.class);
     }
 
@@ -45,11 +45,11 @@ public class FunctionGuardsTest {
 
     @Test
     void orDefault_exception_shouldReturnDefaultValue() {
-        assertThat(orDefault(() -> runtimeExceptionThrowingMethod(), DEFAULT_TEST_VALUE).get()).isEqualTo(DEFAULT_TEST_VALUE);
+        assertThat(orDefault(FunctionGuardsTest::runtimeExceptionThrowingMethod, DEFAULT_TEST_VALUE).get()).isEqualTo(DEFAULT_TEST_VALUE);
     }
 
     @Test
-    void orNull_nonThrowingFunction_shouldReturnfunction() {
+    void orNull_nonThrowingFunction_shouldReturnFunction() {
         var function = orNull(String::valueOf);
         assertThat(function.apply(1L)).isEqualTo("1");
     }
@@ -61,8 +61,8 @@ public class FunctionGuardsTest {
     }
 
     @Test
-    void orNullOnException_nonThrowingFunction_shouldReturnfunction() {
-        var function = orNullOnException((ThrowingSupplier<? extends Object, ? extends Exception>) () -> String.valueOf(1));
+    void orNullOnException_nonThrowingFunction_shouldReturnFunction() {
+        var function = orNullOnException((ThrowingSupplier<?, ? extends Exception>) () -> String.valueOf(1));
         assertThat(function.get()).isEqualTo("1");
     }
 
@@ -73,7 +73,7 @@ public class FunctionGuardsTest {
     }
 
     @Test
-    void orDefault_nonThrowingFunction_shouldReturnfunction() {
+    void orDefault_nonThrowingFunction_shouldReturnFunction() {
         var function = orDefault(String::valueOf, "-1");
         assertThat(function.apply(1)).isEqualTo("1");
 
@@ -86,7 +86,7 @@ public class FunctionGuardsTest {
     }
 
     @Test
-    void orDefaultOnException_nonThrowingFunction_shouldReturnfunction() {
+    void orDefaultOnException_nonThrowingFunction_shouldReturnFunction() {
         var function = orDefaultOnException(FunctionGuardsTest::runtimeExceptionThrowingMethod, "1");
         assertThat(function.get()).isEqualTo("1");
     }
