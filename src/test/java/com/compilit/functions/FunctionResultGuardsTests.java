@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
-public class FunctionResultGuardsTest {
+public class FunctionResultGuardsTests {
 
     private static final String TEST_VALUE = "test";
     private static final String DEFAULT_TEST_VALUE = "default";
@@ -50,7 +50,7 @@ public class FunctionResultGuardsTest {
 
     @Test
     void asStringorNull_exception_shouldReturnNull() {
-        assertThat(asStringOrNull(FunctionResultGuardsTest::runtimeExceptionThrowingMethod)).isNull();
+        assertThat(asStringOrNull(FunctionResultGuardsTests::runtimeExceptionThrowingMethod)).isNull();
     }
 
     @Test
@@ -60,7 +60,7 @@ public class FunctionResultGuardsTest {
 
     @Test
     void asStringorDefault_exception_shouldReturnDefault() {
-        assertThat(asStringOrDefault(FunctionResultGuardsTest::runtimeExceptionThrowingMethod, DEFAULT_TEST_VALUE)).isEqualTo(DEFAULT_TEST_VALUE);
+        assertThat(asStringOrDefault(FunctionResultGuardsTests::runtimeExceptionThrowingMethod, DEFAULT_TEST_VALUE)).isEqualTo(DEFAULT_TEST_VALUE);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class FunctionResultGuardsTest {
 
     @Test
     void orNullOnException_throwingFunction_shouldReturnNull() {
-        var result = orNullOnException(FunctionResultGuardsTest::checkedExceptionThrowingMethod);
+        var result = orNullOnException(FunctionResultGuardsTests::checkedExceptionThrowingMethod);
         assertThat(result).isNull();
     }
 
@@ -100,13 +100,13 @@ public class FunctionResultGuardsTest {
 
     @Test
     void orDefaultOnException_nonThrowingFunction_shouldReturnResult() {
-        var result = orDefaultOnException(FunctionResultGuardsTest::runtimeExceptionThrowingMethod, "1");
+        var result = orDefaultOnException(FunctionResultGuardsTests::runtimeExceptionThrowingMethod, "1");
         assertThat(result).isEqualTo("1");
     }
 
     @Test
     void orDefaultOnException_throwingFunction_shouldReturnNull() {
-        var result = orDefaultOnException(FunctionResultGuardsTest::checkedExceptionThrowingMethod, null);
+        var result = orDefaultOnException(FunctionResultGuardsTests::checkedExceptionThrowingMethod, null);
         assertThat(result).isNull();
     }
 

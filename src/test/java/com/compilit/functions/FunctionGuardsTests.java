@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
-public class FunctionGuardsTest {
+public class FunctionGuardsTests {
 
     private static final String TEST_VALUE = "test";
     private static final String DEFAULT_TEST_VALUE = "default";
@@ -24,17 +24,17 @@ public class FunctionGuardsTest {
 
     @Test
     void orNull_exception_shouldReturnNull() {
-        assertThat(orNull(FunctionGuardsTest::runtimeExceptionThrowingMethod).get()).isNull();
+        assertThat(orNull(FunctionGuardsTests::runtimeExceptionThrowingMethod).get()).isNull();
     }
 
     @Test
     void orNull_checkedException_shouldReturnNull() {
-        assertThat(orNull(orRuntimeException(FunctionGuardsTest::checkedExceptionThrowingMethod)).get()).isNull();
+        assertThat(orNull(orRuntimeException(FunctionGuardsTests::checkedExceptionThrowingMethod)).get()).isNull();
     }
 
     @Test
     void orRuntimeException_checkedException_shouldThrowException() {
-        assertThatThrownBy(() -> orRuntimeException(FunctionGuardsTest::checkedExceptionThrowingMethod).get())
+        assertThatThrownBy(() -> orRuntimeException(FunctionGuardsTests::checkedExceptionThrowingMethod).get())
             .isInstanceOf(RuntimeException.class);
     }
 
@@ -45,7 +45,7 @@ public class FunctionGuardsTest {
 
     @Test
     void orDefault_exception_shouldReturnDefaultValue() {
-        assertThat(orDefault(FunctionGuardsTest::runtimeExceptionThrowingMethod, DEFAULT_TEST_VALUE).get()).isEqualTo(DEFAULT_TEST_VALUE);
+        assertThat(orDefault(FunctionGuardsTests::runtimeExceptionThrowingMethod, DEFAULT_TEST_VALUE).get()).isEqualTo(DEFAULT_TEST_VALUE);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class FunctionGuardsTest {
 
     @Test
     void orNullOnException_throwingFunction_shouldReturnNull() {
-        var function = orNullOnException(FunctionGuardsTest::checkedExceptionThrowingMethod);
+        var function = orNullOnException(FunctionGuardsTests::checkedExceptionThrowingMethod);
         assertThat(function.get()).isNull();
     }
 
@@ -87,13 +87,13 @@ public class FunctionGuardsTest {
 
     @Test
     void orDefaultOnException_nonThrowingFunction_shouldReturnFunction() {
-        var function = orDefaultOnException(FunctionGuardsTest::runtimeExceptionThrowingMethod, "1");
+        var function = orDefaultOnException(FunctionGuardsTests::runtimeExceptionThrowingMethod, "1");
         assertThat(function.get()).isEqualTo("1");
     }
 
     @Test
     void orDefaultOnException_throwingFunction_shouldReturnNull() {
-        var function = orDefaultOnException(FunctionGuardsTest::checkedExceptionThrowingMethod, null);
+        var function = orDefaultOnException(FunctionGuardsTests::checkedExceptionThrowingMethod, null);
         assertThat(function.get()).isNull();
     }
 
