@@ -1,5 +1,9 @@
 package com.compilit.functions;
 
+/**
+ * @param <T> The type you wish to return with the Supplier
+ * @param <E> The possible (checked) exception which can be thrown from the Supplier
+ */
 @FunctionalInterface
 public interface ThrowingSupplier<T, E extends Exception> {
     /**

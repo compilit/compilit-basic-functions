@@ -89,6 +89,11 @@ public final class FuzzyMatchers {
     }
   }
 
+  /**
+   * @param value the first String you wish to compare to the other
+   * @param otherValue the other String you wish to compare to the first
+   * @return a float representing the percentage of the matching sequences between the two Strings
+   */
   public static float getCharSequenceMatchPercentage(
     String value,
     String otherValue
@@ -109,6 +114,11 @@ public final class FuzzyMatchers {
     return charSequenceMatchPercentage;
   }
 
+  /**
+   * @param value the first String you wish to compare to the other
+   * @param otherValue the other String you wish to compare to the first
+   * @return a float representing the percentage of characters matching between the two Strings
+   */
   public static float getCharMatchPercentage(String value, String otherValue) {
     float shortestValueLength = Math.min(value.length(), otherValue.length());
     float longestValueLength = Math.max(value.length(), otherValue.length());
@@ -122,6 +132,11 @@ public final class FuzzyMatchers {
     return charMatchPercentage;
   }
 
+  /**
+   * @param value the first String you wish to compare to the other
+   * @param otherValue the other String you wish to compare to the first
+   * @return a float representing the percentage of the matching length between the two Strings
+   */
   public static float getLengthMatchPercentage(
     String value,
     String otherValue

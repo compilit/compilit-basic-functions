@@ -1,5 +1,10 @@
 package com.compilit.functions;
 
+/**
+ * @param <I> The type that goes into the Function
+ * @param <O> The type that comes out of the Function
+ * @param <E> The possible (checked) exception which can be thrown from the Function
+ */
 @FunctionalInterface
 public interface ThrowingFunction<I, O, E extends Exception> {
 

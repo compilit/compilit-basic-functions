@@ -135,6 +135,7 @@ public final class FunctionResultGuards {
     /**
      * @param supplier a potentially throwing supplier
      * @param <T>      the return type
+     * @param defaultValue the default value you with to return in case of an exception
      * @return either the result of the supplier as a String or the given default value
      */
     public static <T> String asStringOrDefault(Supplier<T> supplier, String defaultValue) {

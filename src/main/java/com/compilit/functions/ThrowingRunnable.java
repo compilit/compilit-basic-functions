@@ -1,5 +1,8 @@
 package com.compilit.functions;
 
+/**
+ * @param <E> The possible (checked) exception which can be thrown from the Runnable
+ */
 @FunctionalInterface
 public interface ThrowingRunnable<E extends Exception> {
     /**
