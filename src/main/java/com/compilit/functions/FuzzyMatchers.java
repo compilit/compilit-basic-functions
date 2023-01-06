@@ -86,7 +86,12 @@ public final class FuzzyMatchers {
     String otherValue,
     float matchingPercentage
   ) {
-    validateInput(value, otherValue, matchingPercentage);
+    if (value == null && otherValue == null) {
+      return true;
+    }
+    if (value == null || otherValue == null) {
+      return false;
+    }
     value = value.toLowerCase();
     otherValue = otherValue.toLowerCase();
     return fuzzyMatches(value, otherValue, matchingPercentage);
@@ -105,29 +110,26 @@ public final class FuzzyMatchers {
     String otherValue,
     float matchingPercentage
   ) {
-    validateInput(value, otherValue, matchingPercentage);
+    if (matchingPercentage > MAX_PERCENTAGE) {
+      throw new MatcherInputException("Matching percentage cannot exceed 100");
+    }
+    if (value == null && otherValue == null) {
+      return true;
+    }
+    if (value == null || otherValue == null) {
+      return false;
+    }
+    if (value.isEmpty() && otherValue.isEmpty()) {
+      return true;
+    }
+    if (value.isEmpty() || otherValue.isEmpty())
+      return false;
     float lengthMatchPercentage = getLengthMatchPercentage(value, otherValue);
     float charMatchPercentage = getCharMatchPercentage(value, otherValue);
     float charSequenceMatchPercentage = getCharSequenceMatchPercentage(value, otherValue);
     return charSequenceMatchPercentage >= matchingPercentage
       && charMatchPercentage >= matchingPercentage
       && lengthMatchPercentage >= matchingPercentage;
-  }
-
-  private static void validateInput(
-    String value,
-    String otherValue,
-    float matchingPercentage
-  ) {
-    if (value == null || otherValue == null) {
-      throw new MatcherInputException("Cannot match null values");
-    }
-    if (matchingPercentage > MAX_PERCENTAGE) {
-      throw new MatcherInputException("Matching percentage cannot exceed 100");
-    }
-    if (value.isEmpty() || otherValue.isEmpty()) {
-      throw new MatcherInputException("Cannot match empty values");
-    }
   }
 
   /**

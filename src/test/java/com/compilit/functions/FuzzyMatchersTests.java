@@ -52,12 +52,6 @@ public class FuzzyMatchersTests {
     assertThat(FuzzyMatchers.fuzzyMatches(value).test(otherValue)).isFalse();
   }
 
-  @ParameterizedTest
-  @MethodSource("throwingTestCases")
-  void fuzzyMatchesPredicate_inValidInput_shouldThrowException(String value, String otherValue) {
-    assertThatThrownBy(() -> FuzzyMatchers.fuzzyMatches(value).test(otherValue))
-      .isInstanceOf(MatcherInputException.class);
-  }
   @Test
   void fuzzyMatchesPredicate$50_matches50Percent_shouldReturnTrue() {
     assertThat(FuzzyMatchers.fuzzyMatches("1234567890", 50).test("12345")).isTrue();
@@ -141,16 +135,12 @@ public class FuzzyMatchersTests {
       Arguments.arguments("b", "frapselationtaroks"),
       Arguments.arguments("z", "fsdlkjfnsldf"),
       Arguments.arguments("abc", "def"),
-      Arguments.arguments("abcdef", "abcdefghijk")
-    );
-  }
-
-  private static Stream<Arguments> throwingTestCases() {
-    return Stream.of(
+      Arguments.arguments("abcdef", "abcdefghijk"),
       Arguments.arguments("test",""),
       Arguments.arguments("", "test"),
       Arguments.arguments(null, "test"),
       Arguments.arguments("test", null)
     );
   }
+
 }
