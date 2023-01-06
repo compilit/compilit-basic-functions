@@ -18,6 +18,12 @@ public class FuzzyMatchersTests {
   }
 
   @ParameterizedTest
+  @MethodSource("validTestCasesDefaultMatchingPercentageCaseInsensitive")
+  void fuzzyMatchesIgnoreCasePredicate_matches_shouldReturnTrue(String value, String otherValue) {
+    assertThat(FuzzyMatchers.fuzzyMatchesIgnoreCase(value).test(otherValue)).isTrue();
+  }
+
+  @ParameterizedTest
   @MethodSource("validTestCasesCustomMatchingPercentage")
   void fuzzyMatchesPredicate_matches_shouldReturnTrue(String value, String otherValue, float matchingPercentage) {
     assertThat(FuzzyMatchers.fuzzyMatches(value, matchingPercentage).test(otherValue)).isTrue();
@@ -70,12 +76,22 @@ public class FuzzyMatchersTests {
 
   private static Stream<Arguments> validTestCasesDefaultMatchingPercentage() {
     return Stream.of(
-      Arguments.arguments("test", "test"),
-      Arguments.arguments("fropselationtaruks", "frapselationtaroks"),
+      Arguments.arguments("Test", "Test"),
+      Arguments.arguments("Fropselationtaruks", "Frapselationtaroks"),
       Arguments.arguments("ropselationtaruksf", "frapselationtaroks"),
       Arguments.arguments("1234567890", "12345678"),
       Arguments.arguments("0123456789", "1234567890"),
       Arguments.arguments("Almost correct", "Almast correct")
+    );
+  }
+  private static Stream<Arguments> validTestCasesDefaultMatchingPercentageCaseInsensitive() {
+    return Stream.of(
+      Arguments.arguments("test", "TEST"),
+      Arguments.arguments("fropselationtaruks", "frapselationtaroks"),
+      Arguments.arguments("ropselationtaruksf", "FRAPSELATIONTARASK"),
+      Arguments.arguments("1234567890", "12345678"),
+      Arguments.arguments("0123456789", "1234567890"),
+      Arguments.arguments("ALMOST correct", "Almast correct")
     );
   }
 
