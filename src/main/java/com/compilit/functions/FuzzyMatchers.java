@@ -4,10 +4,12 @@ import java.util.function.Predicate;
 
 /**
  * These functions are used to apply fuzzy matching to Strings. Meaning that the values need to
- * partially match conform the given percentage. It does this in two ways: - It will check if there
- * is a sequence of characters matching between the two values which has a length more or equal to
- * the desired percentage. - And it will check if the total amount of matching characters is more or
- * equal to the desired percentage.
+ * partially match conform the given percentage. It does this in three ways:
+ * 1. It will check if there are sequences of characters matching between the two values.
+ * 2. It will check if the total amount of matching characters.
+ * 3. It will check the length of both values.
+ * All of these checks have to match for at least the given match percentage,
+ * or 80%, which is the default.
  */
 public final class FuzzyMatchers {
 
@@ -86,12 +88,10 @@ public final class FuzzyMatchers {
     String otherValue,
     float matchingPercentage
   ) {
-    if (value == null && otherValue == null) {
+    if (bothValuesAreNullOrEmpty(value, otherValue))
       return true;
-    }
-    if (value == null || otherValue == null) {
+    if (oneValueIsNullOrEmpty(value, otherValue))
       return false;
-    }
     value = value.toLowerCase();
     otherValue = otherValue.toLowerCase();
     return fuzzyMatches(value, otherValue, matchingPercentage);
@@ -113,16 +113,9 @@ public final class FuzzyMatchers {
     if (matchingPercentage > MAX_PERCENTAGE) {
       throw new MatcherInputException("Matching percentage cannot exceed 100");
     }
-    if (value == null && otherValue == null) {
+    if (bothValuesAreNullOrEmpty(value, otherValue))
       return true;
-    }
-    if (value == null || otherValue == null) {
-      return false;
-    }
-    if (value.isEmpty() && otherValue.isEmpty()) {
-      return true;
-    }
-    if (value.isEmpty() || otherValue.isEmpty())
+    if (oneValueIsNullOrEmpty(value, otherValue))
       return false;
     float lengthMatchPercentage = getLengthMatchPercentage(value, otherValue);
     float charMatchPercentage = getCharMatchPercentage(value, otherValue);
@@ -130,6 +123,16 @@ public final class FuzzyMatchers {
     return charSequenceMatchPercentage >= matchingPercentage
       && charMatchPercentage >= matchingPercentage
       && lengthMatchPercentage >= matchingPercentage;
+  }
+
+  private static boolean oneValueIsNullOrEmpty(String value, String otherValue) {
+    return (value == null || otherValue == null)
+      || (value.isEmpty() || otherValue.isEmpty());
+  }
+
+  private static boolean bothValuesAreNullOrEmpty(String value, String otherValue) {
+    return (value == null && otherValue == null)
+      || ((value != null && value.isEmpty()) && (otherValue != null && otherValue.isEmpty()));
   }
 
   /**
